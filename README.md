@@ -1,5 +1,8 @@
-Список пропсов компонента:
+# [Компонент BlurHash к статье](добавить ссылку)
 
+## Список пропсов компонента:
+
+```tsx
 export interface LazyPictureProps {
 data: IPicture;
 alt?: string;
@@ -16,11 +19,11 @@ desktop: string;
 tablet: string;
 mobile: string;
 }
+```
 
 
-
-Сам компонент:
-
+## Сам компонент:
+```tsx
 export default memo(function LazyPicture({
   data,
   onLoadError,
@@ -48,23 +51,18 @@ export default memo(function LazyPicture({
       setIsLoaded(true);
     };
   }
-
+```
 
  
-Задаем базовый флаг isLoaded для изменения стилей и контроля за состоянием загрузки
-imgPlaceholder - это и есть строка blurhash
-imageSrc - сюда будет “сетиться” ссылка на исходное изображение (по дефолту пустая строка. или, как в нашем случае, объект из нескольких полей)
-imageRef - для отслеживания попадания картинки в область видимости юзера
-onLoad - хендлер успешной загрузки изображения
+* Задаем базовый флаг `isLoaded` для изменения стилей и контроля за состоянием загрузки
+* `imgPlaceholder` - это и есть строка `blurhash`
+* `imageSrc` - сюда будет “сетиться” ссылка на исходное изображение (по дефолту пустая строка. или, как в нашем случае, объект из нескольких полей)
+* `imageRef` - для отслеживания попадания картинки в область видимости юзера
+* `onLoad` - хендлер успешной загрузки изображения
 
 
-
-
-
-
-
-
-Добавляем useEffect, который выполняет основную работу:
+## Добавляем useEffect, который выполняет основную работу:
+```tsx
 useEffect(() => {
   let observer: IntersectionObserver;
   if (IntersectionObserver) {
@@ -92,24 +90,12 @@ useEffect(() => {
       imageRef?.current && observer.unobserve(imageRef.current);
     };
 }, []);
+```
 
+Используем `IntersectionObserver` для отслеживания попадания изображения в зону видимости, когда это происходит - сетим данные в `Picture` и отменяем подписку.
 
-Используем IntersectionObserver для отслеживания попадания изображения в зону видимости, когда это происходит - сетим данные в Picture и отменяем подписку.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Собственно jsx:
+## Собственно jsx:
+```jsx
 return (
   <StyledLazyImage>
     <StyledBlurHash isHidden={isLoaded}>
@@ -133,11 +119,12 @@ return (
   </StyledLazyImage>
 );
 });
+```
 
+Здесь используется `styled-components`, но это не принципиально.
 
-Здесь используется styled-components, но это не принципиально.
-
-StyledLazyImage - div контейнер, его стили: 
+## `StyledLazyImage` - div контейнер, его стили: 
+```tsx
 const StyledLazyImage = styled.div`
   width: 100%;
   height: 100%;
@@ -150,13 +137,12 @@ const StyledLazyImage = styled.div`
     opacity: 0;
   }
 `;
+```
 
-
-Blurhash - это компонент библиотеки react-blurhash, его пропсы:
-
-
-StyledBlurhash - контейнер для компонента Blurhash, его стили:
-
+## `Blurhash` - это компонент библиотеки `react-blurhash`, его пропсы:
+<img src="media/blurhash-props.png" width="600">
+## `StyledBlurhash` - контейнер для компонента `Blurhash`, его стили:
+```tsx
 const StyledBlurHash = styled.div<{ isHidden?: boolean }>`
   position: absolute;
   width: 100%;
@@ -180,11 +166,12 @@ const displayAnim = keyframes`
     display: none;
   }
 `;
+```
+Скорость и плавность скрытия `Blurhash` можно регулировать через `transition` и `animation`.
 
-Скорость и плавность скрытия Blurhash можно регулировать через transition и animation.
-
-Picture - компонент картинки (его можно заменить на NextImage или любой другой, он должен возвращать image).
-
+## `Picture` - компонент картинки:
+(его можно заменить на NextImage или любой другой, он должен возвращать image)
+```tsx
 const Picture = forwardRef<any, PictureProps>((props, imageRef) => {
   const {
     noImageOnTouch = false,
@@ -220,17 +207,10 @@ const Picture = forwardRef<any, PictureProps>((props, imageRef) => {
     webp_x1: mobile_webp_x1,
     webp_x2: mobile_webp_x2,
   } = mobileImages;
+```
+Он принимает ссылки на все типы изображений и сетит их в `<picture />`
 
-
-
-
-Он принимает ссылки на все типы изображений и сетит их в <picture />
-
-
-
-
-
-
+```tsx
 return !Object.keys(props).length ? (
     <img src="/images/error-page-image.png" alt="error-image" />
   ) : desktop_x1 && desktop_x1.endsWith(".svg") ? (
@@ -287,8 +267,7 @@ return !Object.keys(props).length ? (
   );
 });
 
-
 Picture.displayName = "Picture";
 export default Picture;
-
+```
 
