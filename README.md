@@ -1,8 +1,8 @@
 # [Компонент LazyPicture c BlurHash к статье](добавить ссылку)
 
-Прежде чем переходить к реалиации на фронте, мы реализовали маленький микросервис, который вы можете поднять из docker образа, который сможет генерировать base83 для ваших картинок. Микросервис доступен в [репозитории](https://github.com/dev-family/blurhash): 
+Before moving on to the front end implementation, we have implemented a small microservice that you can pull up from a docker image that can generate base83 for your images. The microservice is available in [repository](https://github.com/dev-family/blurhash): 
 
-## Список пропсов компонента:
+## List of component props:
 
 ```tsx
 export interface LazyPictureProps {
@@ -24,7 +24,7 @@ mobile: string;
 ```
 
 
-## Сам компонент:
+## The component itself:
 ```tsx
 export default memo(function LazyPicture({
   data,
@@ -56,14 +56,14 @@ export default memo(function LazyPicture({
 ```
 
  
-* Задаем базовый флаг `isLoaded` для изменения стилей и контроля за состоянием загрузки
-* `imgPlaceholder` - это и есть строка `blurhash`
-* `imageSrc` - сюда будет “сетиться” ссылка на исходное изображение (по дефолту пустая строка. или, как в нашем случае, объект из нескольких полей)
-* `imageRef` - для отслеживания попадания картинки в область видимости юзера
-* `onLoad` - хендлер успешной загрузки изображения
+* Set the base flag `isLoaded` to change styles and monitor loading status
+* `imgPlaceholder` - that's the line `blurhash`
+* `imageSrc` - The link to the source image will be set here (by default an empty string. or, as in our case, an object of several fields).
+* `imageRef` - to track when a picture is in the user's field of view
+* `onLoad` - handler of successful image loading
 
 
-## Добавляем useEffect, который выполняет основную работу:
+## We add useEffect, which does most of the work:
 ```tsx
 useEffect(() => {
   let observer: IntersectionObserver;
@@ -94,9 +94,9 @@ useEffect(() => {
 }, []);
 ```
 
-Используем `IntersectionObserver` для отслеживания попадания изображения в зону видимости, когда это происходит - сетим данные в `Picture` и отменяем подписку.
+Use `IntersectionObserver` to track when an image comes into range, when it does - net the data in `Picture` and cancel the subscription.
 
-## Собственно jsx:
+## jsx:
 ```jsx
 return (
   <StyledLazyImage>
@@ -123,9 +123,9 @@ return (
 });
 ```
 
-Здесь используется `styled-components`, но это не принципиально.
+Here `styled-components` used, but it's not crucial.
 
-## `StyledLazyImage` - div контейнер, его стили: 
+## `StyledLazyImage` - div container, its styles: 
 ```tsx
 const StyledLazyImage = styled.div`
   width: 100%;
@@ -141,9 +141,9 @@ const StyledLazyImage = styled.div`
 `;
 ```
 
-## `Blurhash` - это компонент библиотеки `react-blurhash`, его пропсы:
+## `Blurhash` - is a component of the `react-blurhash` library, its props are:
 <img src="media/blurhash-props.png" width="600">
-## `StyledBlurhash` - контейнер для компонента `Blurhash`, его стили:
+## `StyledBlurhash` - container for the `Blurhash` component, its styles:
 ```tsx
 const StyledBlurHash = styled.div<{ isHidden?: boolean }>`
   position: absolute;
@@ -169,10 +169,10 @@ const displayAnim = keyframes`
   }
 `;
 ```
-Скорость и плавность скрытия `Blurhash` можно регулировать через `transition` и `animation`.
+The speed and smoothness of `Blurhash` hiding can be adjusted via `transition` and `animation`.
 
-## `Picture` - компонент картинки:
-(его можно заменить на NextImage или любой другой, он должен возвращать image)
+## `Picture` - picture component:
+(it can be replaced by NextImage or any other, it should return an image)
 ```tsx
 const Picture = forwardRef<any, PictureProps>((props, imageRef) => {
   const {
@@ -210,7 +210,7 @@ const Picture = forwardRef<any, PictureProps>((props, imageRef) => {
     webp_x2: mobile_webp_x2,
   } = mobileImages;
 ```
-Он принимает ссылки на все типы изображений и сетит их в `<picture />`
+It takes references to all types of images and nets them in the `<picture />`
 
 ```tsx
 return !Object.keys(props).length ? (
