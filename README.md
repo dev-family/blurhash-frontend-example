@@ -1,4 +1,4 @@
-# [Компонент LazyPicture c BlurHash к статье](https://dev.family/blog/article/improving-user-experience-efficient-image-loading-using-progressive-display)
+# [LazyPicture component with BlurHash for the article](https://dev.family/blog/article/improving-user-experience-efficient-image-loading-using-progressive-display)
 
 Before moving on to the front end implementation, we have implemented a small microservice that you can pull up from a docker image that can generate base83 for your images. The microservice is available in [repository](https://github.com/dev-family/blurhash): 
 
